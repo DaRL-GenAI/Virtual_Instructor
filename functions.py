@@ -4,6 +4,8 @@ from gtts import gTTS
 from moviepy import ImageClip, AudioFileClip, VideoFileClip, concatenate_videoclips
 import os
 import subprocess
+import parsing
+from openai import OpenAI
 
 
 #extracting each image from the slides
@@ -36,6 +38,27 @@ def make_audio_gtts(text, output_path):
     tts.save(output_path)
 
 
+#experimental, for future use
+def make_audio_openai(text, output_path, voice="alloy", model="tts-1"):
+    """
+    Generate audio using OpenAI TTS API
+    
+    Args:
+        text (str): Text to convert to speech
+        output_path (str): Path where audio file will be saved
+        voice (str): Voice to use - options: alloy, echo, fable, onyx, nova, shimmer
+        model (str): Model to use - options: tts-1 (faster), tts-1-hd (higher quality)
+    """
+    client = OpenAI()  # Make sure OPENAI_API_KEY is set in environment variables
+    
+    with client.audio.speech.with_streaming_response.create(
+        model=model,
+        voice=voice,
+        input=text,
+    ) as response:
+        response.stream_to_file(output_path)
+
+
 
 #generate each clip from image + audio
 def make_clip(slide_image_path, audio_path, output_dir):
@@ -49,7 +72,7 @@ def make_clip(slide_image_path, audio_path, output_dir):
 
 
 #using ffmpeg instead of moviepy for faster performance
-def concat_clips(clip_folder, final_video_folder):
+def concat_clips(clip_folder, final_video_folder, final_video_name):
 
     clip_list = []
     for clip in os.listdir(clip_folder):
@@ -70,7 +93,7 @@ def concat_clips(clip_folder, final_video_folder):
             f.write(f"file '{abs_path}'\n")
 
     #os.makedirs(final_video_folder, exist_ok=True)
-    output_path = f"{final_video_folder}\\final_video.mp4"
+    output_path = f"{final_video_folder}\\final_video_{final_video_name}.mp4"
 
     subprocess.run([
         'ffmpeg', '-f', 'concat', '-safe', '0',
@@ -95,4 +118,4 @@ if __name__ == '__main__':
     #img_paths = extract_slides('slides.pdf', output_dir='slide_images')
     #print(img_paths)
 
-    concat_clips('audio_image_clips', 'final_video')
+    #concat_clips('audio_image_clips', 'final_video')
