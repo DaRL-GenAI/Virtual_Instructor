@@ -8,11 +8,12 @@
 Jacob Igo1, Huaiyuan Yao1, Wanpeng Xu1, Nadia Kellam1, Hua Wei1
 1
 
-Data Mining and Reinforcement Learning (DaRL Lab)
+### Data Mining and Reinforcement Learning (DaRL Lab)
 
 Arizona State University, Tempe, AZ, USA
 
-Emails: {jigo2, huaiyuan, wanpeng.xu, nadia.kellam, hua.wei}@asu.edu 
+#### Emails: 
+{jigo2, huaiyuan, wanpeng.xu, nadia.kellam, hua.wei}@asu.edu
 
 Submitted and presented at ASU's LERN 2026 convening.
 
